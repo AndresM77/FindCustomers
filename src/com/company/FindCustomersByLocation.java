@@ -81,6 +81,7 @@ public class FindCustomersByLocation {
             //Remove customer from list if customer is too far
             if (distance > proximity) {
                 customers.remove(i);
+                i--;
             }
         }
 

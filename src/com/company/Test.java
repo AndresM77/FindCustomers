@@ -95,7 +95,6 @@ public class Test {
         }
 
         String expectedData =
-                "{ latitude: \"33.7451022\", user_id: 3, name: \"Ian Pat\", longitude: \"-124.238335\" }\n" +
                 "{ latitude: \"37.5302756\", user_id: 2, name: \"John Doe\", longitude: \"-122.4097222\" }\n";
         if (customersToString.equals(expectedData)) {
             System.out.println("nearByTest: Success!");
