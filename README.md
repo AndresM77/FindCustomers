@@ -44,3 +44,4 @@ This github repository holds the development code for the project. However, in o
 - The Customer object which each json object is stored in is called Customer.java
 - The file which does the sorting/filtering is called FindCustomersByLocation.java
 - The file which tests the functions in the program is called Test.java
+- I took the freedom of renaming the input file from Customer (2).txt to Customer.txt
