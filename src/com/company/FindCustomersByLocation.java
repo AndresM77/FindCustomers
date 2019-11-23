@@ -19,31 +19,35 @@ public class FindCustomersByLocation {
         ArrayList<Customer> customers;
 
         //Read in and parse data from txt files
-        jsonData = ReadFile(FILE);
-        customers = ParseJSON(jsonData);
-        customers = OnlyNearBy(customers);
+        jsonData = readFile(FILE);
+        customers = parseJSON(jsonData);
+        customers = onlyNearBy(customers, MAX_DISTANCE);
+        customers = sortCustomers(customers);
 
         if (customers == null) {
             System.out.println("Invalid file, json not formatted properly");
         } else {
-            customers.sort(new Comparator<Customer>() {
-                @Override
-                public int compare(Customer o1, Customer o2) {
-                    return o1.uid.compareTo(o2.uid);
-                }
-            });
-
             System.out.println(customers);
-            write(customers);
+            write(customers, NEW_FILE);
         }
 
     }
 
-    private static void write(ArrayList<Customer> customers) {
+    public static ArrayList<Customer> sortCustomers(ArrayList<Customer> customers) {
+        customers.sort(new Comparator<Customer>() {
+            @Override
+            public int compare(Customer o1, Customer o2) {
+                return o1.uid.compareTo(o2.uid);
+            }
+        });
+        return customers;
+    }
+
+    public static void write(ArrayList<Customer> customers, String file) {
         PrintWriter writer = null;
         try {
             //Creating a new file to write to
-            writer = new PrintWriter(new FileWriter(NEW_FILE));
+            writer = new PrintWriter(new FileWriter(file));
             //Writing to new file customer by customer with a new line each time
             for (int i = 0; i < customers.size(); i++) {
                 writer.println(customers.get(i));
@@ -58,7 +62,7 @@ public class FindCustomersByLocation {
         }
     }
 
-    private static ArrayList<Customer> OnlyNearBy(ArrayList<Customer> customers) {
+    public static ArrayList<Customer> onlyNearBy(ArrayList<Customer> customers, int proximity) {
         for (int i = 0; i < customers.size(); i++) {
             //Initialize variables with radian versions of lat long
             double x1 = Math.toRadians(customers.get(i).lat);
@@ -72,10 +76,10 @@ public class FindCustomersByLocation {
             //Each degree corresponds to a nautical mile
             double distance = angle * 60;
             //Convert to kilometers
-            distance = nmilesTokm(distance);
+            distance = distance * NAUT_TO_KM;
 
             //Remove customer from list if customer is too far
-            if (distance > MAX_DISTANCE) {
+            if (distance > proximity) {
                 customers.remove(i);
             }
         }
@@ -83,12 +87,8 @@ public class FindCustomersByLocation {
         return customers;
     }
 
-    private static double nmilesTokm(double distance) {
-        return distance * NAUT_TO_KM;
-    }
-
     //Reads data from CustomerList.txt
-    public static String ReadFile(String filename) {
+    public static String readFile(String filename) {
         String output = "";
         BufferedReader reader = null;
         try {
@@ -117,7 +117,7 @@ public class FindCustomersByLocation {
     }
 
     //Places data into customer objects
-    private static ArrayList<Customer> ParseJSON(String file) {
+    public static ArrayList<Customer> parseJSON(String file) {
         ArrayList<Customer> customers = new ArrayList<>();
         int start = 0;
         int end = 0;
