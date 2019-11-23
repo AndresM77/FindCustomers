@@ -29,4 +29,10 @@ Each submission must meet the following requirements:
 
 
 ## Notes
-I ended up writing my own parser, reader, and writer as conventional libararies in Java did not have the functionality which I was looking for.
+- I ended up writing my own parser, reader, and writer as conventional libararies in Java did not have the functionality which I was looking for.
+- The output of the program is in the file output.txt
+- The test input for the program is in the file test.txt
+- The test output for the program is in the file testout.txt
+- The Customer object which each json object is stored in is called Customer.java
+- The file which does the sorting/filtering is called FindCustomersByLocation.java
+- The file which tests the functions in the program is called Test.java
