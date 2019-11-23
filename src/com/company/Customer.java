@@ -2,13 +2,13 @@ package com.company;
 import java.lang.Integer;
 
 public class Customer implements Comparable<Customer> {
-    Double lat;
-    Double lon;
+    double lat;
+    double lon;
     String name;
     //Defined as an integer for comparisons
     Integer uid;
 
-    public Customer(Double lat, Double lon, int uid, String name) {
+    public Customer(double lat, double lon, int uid, String name) {
         this.lat = lat;
         this.lon = lon;
         this.uid = uid;

@@ -1,12 +1,17 @@
 package com.company;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
 public class FindCustomersByLocation {
+    //Declaring constants
+    private static final String FILE = "CustomerList.txt";
+    private static final String NEW_FILE = "output.txt";
+    private static final double OFFICE_LAT = 37.788802;
+    private static final double OFFICE_LONG = -122.4025067;
+    private static final double NAUT_TO_KM = 1.852;
+    private static final int MAX_DISTANCE = 100;
 
     public static void main(String[] args) {
         //Initialize local Variables
@@ -14,7 +19,7 @@ public class FindCustomersByLocation {
         ArrayList<Customer> customers;
 
         //Read in and parse data from txt files
-        jsonData = ReadFile("CustomerList.txt");
+        jsonData = ReadFile(FILE);
         customers = ParseJSON(jsonData);
         customers = OnlyNearBy(customers);
 
@@ -29,13 +34,57 @@ public class FindCustomersByLocation {
             });
 
             System.out.println(customers);
+            write(customers);
         }
 
     }
 
+    private static void write(ArrayList<Customer> customers) {
+        PrintWriter writer = null;
+        try {
+            //Creating a new file to write to
+            writer = new PrintWriter(new FileWriter(NEW_FILE));
+            //Writing to new file customer by customer with a new line each time
+            for (int i = 0; i < customers.size(); i++) {
+                writer.println(customers.get(i));
+            }
+            writer.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        } finally {
+            //Closes file writer if it was instantiated
+            if (writer != null)
+                writer.close();
+        }
+    }
+
     private static ArrayList<Customer> OnlyNearBy(ArrayList<Customer> customers) {
-        
+        for (int i = 0; i < customers.size(); i++) {
+            //Initialize variables with radian versions of lat long
+            double x1 = Math.toRadians(customers.get(i).lat);
+            double y1 = Math.toRadians(customers.get(i).lon);
+            double x2 = Math.toRadians(OFFICE_LAT);
+            double y2 = Math.toRadians(OFFICE_LONG);
+
+            //Do calculations
+            double angle = Math.acos(Math.sin(x1) * Math.sin(x2) + Math.cos(x1) * Math.cos(x2) * Math.cos(y1 - y2));
+            angle = Math.toDegrees(angle);
+            //Each degree corresponds to a nautical mile
+            double distance = angle * 60;
+            //Convert to kilometers
+            distance = nmilesTokm(distance);
+
+            //Remove customer from list if customer is too far
+            if (distance > MAX_DISTANCE) {
+                customers.remove(i);
+            }
+        }
+
         return customers;
+    }
+
+    private static double nmilesTokm(double distance) {
+        return distance * NAUT_TO_KM;
     }
 
     //Reads data from CustomerList.txt
@@ -57,7 +106,7 @@ public class FindCustomersByLocation {
             e.printStackTrace();
         } finally {
             try {
-                //Releasing memory for file reader
+                //Releasing memory for file reader if instantiated
                 if (reader != null)
                     reader.close();
             } catch (IOException e) {
@@ -90,7 +139,7 @@ public class FindCustomersByLocation {
             end = file.indexOf("\",", start);
             String name = file.substring(start, end);
 
-            //Searching for longtitutde
+            //Searching for longitutde
             start = file.indexOf("longitude: \"", end) + 12;
             end = file.indexOf("\" }", start);
             double lon = Double.parseDouble(file.substring(start, end));
