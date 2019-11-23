@@ -29,7 +29,7 @@ Each submission must meet the following requirements:
 This github repository holds the development code for the project. However, in order to make the project easy to execute, I have taken out the production files and isolated them within the Interview_Project folder (which also contains both the output and test cases). In order to execute the code and run the tests, follow these steps:
 
 1. Download the repository
-2. Navigate to the directory /Interview_Project (The test case and output files should be here)
+2. In the terminal, navigate to the directory /Interview_Project (The test case and output files should be here)
 3. The SDK used to develop this project was java version "10.0.2" so make sure that on your computer you have a Java JDK of 10.0.2 or above
   - The JDK can be downloaded from [Oracle Java JDK Downloads](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
 4. To test the code run `java com.company.Test`
